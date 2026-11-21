@@ -24,6 +24,15 @@
     color: #4a4a4a;
   }
 
+  
+  /* Fecha de impresión en la esquina superior */
+  .fecha {
+    position: fixed;
+    top: -20mm; left: 0; right: 0;
+    text-align: right;
+    font-size: 9pt;
+    color: #4a4a4a;
+  }
   /* Pie: solo una línea y el número de página al centro */
   .pie {
     position: fixed;
@@ -70,8 +79,7 @@
 </head>
 <body>
 
-  <!-- En PHP, reemplaza la fecha por: <?php echo date('d/m/Y H:i'); ?> -->
-  <div class="fecha">Fecha de impresión: 31/10/2026 10:30</div>
+  <div class="fecha">Fecha de impresión: {{ now()->timezone('America/El_Salvador')->format('d/m/Y') }}</div>
 
   <div class="pie"><span class="num"></span></div>
 
@@ -88,19 +96,24 @@
   <div class="entrada">
     <h2>{{ $credencial->nombre_aplicacion }}</h2>
     <div class="fila"><span class="etq">Usuario o correo:</span><span class="val">{{ $credencial->correo_o_usuario }}</span></div>
-    <div class="fila"><span class="etq">URL:</span><span class="val">{{ $credencial->url ?? 'No especificada' }}</span></div>
+    @if($credencial->url)
+    <div class="fila"><span class="etq">URL:</span><span class="val">{{ $credencial->url }}</span></div>
+    @endif
     <div class="fila"><span class="etq">Contraseña:</span><span class="val clave">{{ $credencial->contrasena }}</span></div>
     @if($credencial->notas)
     <div class="fila"><span class="etq">Notas:</span><span class="val">{{ $credencial->notas }}</span></div>
     @endif
   </div>
   @empty
-  <p style="padding: 10mm 0; color: #4a4a4a;">No tienes credenciales guardadas en tu bóveda.</p>
-  @endforelse
-    <div class="fila"><span class="etq">URL:</span><span class="val">https://www.mibanco.com.sv</span></div>
-    <div class="fila"><span class="etq">Contraseña:</span><span class="val clave">B@nc0-Segur0!</span></div>
+  <div class="entrada">
+    <p style="color: #4a4a4a;">No tienes credenciales guardadas en tu bóveda.</p>
   </div>
+  @endforelse
 
+  <p class="aviso">
+    Este documento contiene contraseñas en texto visible. Guárdalo en un lugar seguro
+    y elimínalo cuando ya no lo necesites.
+  </p>
 
 </body>
 </html>
